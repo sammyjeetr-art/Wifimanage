@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ WiFi Manager - Kontrol SSID</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    
+    body {
+      background: #0c1a15;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #14231e;
+      border-radius: 36px;
+      padding: 24px;
+      border: 1px solid #2d4a3f;
+      box-shadow: 0 25px 50px -12px rgba(0,255,170,0.25);
+    }
+    
+    h1 {
+      color: #2af598;
+      font-size: 28px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .subtitle {
+      color: #7a9e93;
+      font-size: 14px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #2d4a3f;
+      padding-bottom: 15px;
+    }
+    
+    /* Login Section */
+    .login-box {
+      background: #0f1f1b;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #2d4a3f;
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .input-group label {
+      display: block;
+      color: #b4d9cf;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 15px;
+      background: #0a1512;
+      border: 2px solid #1f3e35;
+      border-radius: 20px;
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: #2af598;
+      box-shadow: 0 0 0 3px rgba(42,245,152,0.2);
+    }
+    
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2af598, #1ac0d9);
+      border: none;
+      border-radius: 25px;
+      color: #003b2f;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 10px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(42,245,152,0.3);
+    }
+    
+    button.secondary {
+      background: transparent;
+      border: 2px solid #2af598;
+      color: #2af598;
+    }
+    
+    button.danger {
+      background: linear-gradient(135deg, #ff6b6b, #ee5253);
+      color: white;
+    }
+    
+    /* Menu Utama */
+    .main-menu {
+      background: #0f1f1b;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #1a2f29;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    
+    .menu-item:hover {
+      border-color: #2af598;
+      background: #1f3e35;
+    }
+    
+    .menu-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .menu-icon {
+      width: 45px;
+      height: 45px;
+      background: #2af59820;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .menu-text h3 {
+      color: white;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    
+    .menu-text p {
+      color: #7a9e93;
+      font-size: 12px;
+    }
+    
+    .status-badge {
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    
+    .status-on {
+      background: #2af598;
+      color: #003b2f;
+    }
+    
+    .status-off {
+      background: #ff6b6b;
+      color: white;
+    }
+    
+    /* SSID List */
+    .ssid-list {
+      background: #0f1f1b;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .ssid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .ssid-header h2 {
+      color: white;
+      font-size: 18px;
+    }
+    
+    .back-btn {
+      color: #2af598;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .ssid-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #1a2f29;
+      border-radius: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .ssid-info h4 {
+      color: white;
+      margin-bottom: 5px;
+    }
+    
+    .ssid-info p {
+      color: #7a9e93;
+      font-size: 12px;
+    }
+    
+    .toggle-switch {
+      width: 60px;
+      height: 30px;
+      background: #2d4a3f;
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .toggle-switch.active {
+      background: #2af598;
+    }
+    
+    .toggle-switch::after {
+      content: '';
+      width: 26px;
+      height: 26px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s;
+    }
+    
+    .toggle-switch.active::after {
+      left: 32px;
+    }
+    
+    /* Info Box */
+    .info-box {
+      background: #1a2f29;
+      border-radius: 20px;
+      padding: 15px;
+      color: #7a9e93;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .info-box strong {
+      color: #2af598;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ WiFi Manager</h1>
+    <div class="subtitle">Kontrol SSID 1-8 dari jarak jauh</div>
+    
+    <!-- Login Screen -->
+    <div id="loginScreen">
+      <div class="login-box">
+        <div class="input-group">
+          <label>🌐 IP Router</label>
+          <input type="text" id="routerIp" placeholder="192.168.1.1" value="192.168.1.1">
+        </div>
+        <div class="input-group">
+          <label>👤 Username</label>
+          <input type="text" id="username" placeholder="admin">
+        </div>
+        <div class="input-group">
+          <label>🔑 Password</label>
+          <input type="password" id="password" placeholder="••••••••">
+        </div>
+        <button onclick="login()">🔓 LOGIN KE ROUTER</button>
+        
+        <div class="info-box" style="margin-top: 20px;">
+          <strong>📝 Default Login:</strong><br>
+          • TP-Link: admin/admin<br>
+          • Mercusys: admin/admin<br>
+          • ASUS: admin/admin<br>
+          • Linksys: admin/password
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Menu -->
+    <div id="mainMenu" class="hidden">
+      <div class="main-menu">
+        <div class="menu-item" onclick="showPowerMenu()">
+          <div class="menu-left">
+            <div class="menu-icon">⚡</div>
+            <div class="menu-text">
+              <h3>Power WiFi</h3>
+              <p>Hidupkan / Matikan semua WiFi</p>
+            </div>
+          </div>
+          <div class="status-badge status-on" id="mainPowerStatus">ON</div>
+        </div>
+        
+        <div class="menu-item" onclick="showSSIDMenu()">
+          <div class="menu-left">
+            <div class="menu-icon">📶</div>
+            <div class="menu-text">
+              <h3>SSID 1-8</h3>
+              <p>Atur masing-masing jaringan</p>
+            </div>
+          </div>
+          <span style="color:#2af598;">▶</span>
+        </div>
+      </div>
+      
+      <button class="secondary" onclick="logout()">🚪 Logout</button>
+    </div>
+    
+    <!-- Power Menu -->
+    <div id="powerMenu" class="hidden">
+      <div class="ssid-list">
+        <div class="ssid-header">
+          <h2>⚡ Kontrol Power</h2>
+          <span class="back-btn" onclick="backToMain()">← Kembali</span>
+        </div>
+        
+        <div class="menu-item" onclick="setAllWiFi('on')">
+          <div class="menu-left">
+            <div class="menu-icon">✅</div>
+            <div class="menu-text">
+              <h3>Nyalakan Semua WiFi</h3>
+              <p>SSID 1-8 akan ON semua</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="menu-item" onclick="setAllWiFi('off')">
+          <div class="menu-left">
+            <div class="menu-icon">❌</div>
+            <div class="menu-text">
+              <h3>Matikan Semua WiFi</h3>
+              <p>SSID 1-8 akan OFF semua</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="info-box" style="margin-top: 20px;">
+          <strong>⚠️ Catatan:</strong> Mematikan semua WiFi akan memutus semua perangkat yang terhubung.
+        </div>
+      </div>
+    </div>
+    
+    <!-- SSID Menu -->
+    <div id="ssidMenu" class="hidden">
+      <div class="ssid-list">
+        <div class="ssid-header">
+          <h2>📶 Daftar SSID 1-8</h2>
+          <span class="back-btn" onclick="backToMain()">← Kembali</span>
+        </div>
+        
+        <!-- SSID items akan diisi JavaScript -->
+        <div id="ssidList"></div>
+        
+        <div class="info-box" style="margin-top: 20px;">
+          <strong>💡 Tips:</strong> Klik toggle untuk hidup/matikan SSID tertentu
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulasi status SSID (nanti diganti dengan data real dari router)
+    let ssidStatus = {
+      1: true,  // SSID1 ON
+      2: true,  // SSID2 ON
+      3: false, // SSID3 OFF
+      4: true,  // SSID4 ON
+      5: false, // SSID5 OFF
+      6: true,  // SSID6 ON
+      7: false, // SSID7 OFF
+      8: true   // SSID8 ON
+    };
+    
+    let isLoggedIn = false;
+    let routerIp = '';
+    let username = '';
+    let password = '';
+    
+    function login() {
+      routerIp = document.getElementById('routerIp').value;
+      username = document.getElementById('username').value;
+      password = document.getElementById('password').value;
+      
+      // Validasi sederhana
+      if (!routerIp || !username || !password) {
+        alert('❌ Semua field harus diisi!');
+        return;
+      }
+      
+      // Simulasi login sukses
+      alert('✅ Login berhasil (simulasi)');
+      
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainMenu').classList.remove('hidden');
+      
+      // Update status power
+      updatePowerStatus();
+    }
+    
+    function logout() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('routerIp').value = '192.168.1.1';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+    
+    function backToMain() {
+      document.getElementById('powerMenu').classList.add('hidden');
+      document.getElementById('ssidMenu').classList.add('hidden');
+      document.getElementById('mainMenu').classList.remove('hidden');
+    }
+    
+    function showPowerMenu() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      document.getElementById('powerMenu').classList.remove('hidden');
+    }
+    
+    function showSSIDMenu() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      document.getElementById('ssidMenu').classList.remove('hidden');
+      renderSSIDList();
+    }
+    
+    function renderSSIDList() {
+      const ssidList = document.getElementById('ssidList');
+      let html = '';
+      
+      for (let i = 1; i <= 8; i++) {
+        const isOn = ssidStatus[i];
+        html += `
+          <div class="ssid-item">
+            <div class="ssid-info">
+              <h4>SSID ${i}</h4>
+              <p>Jaringan WiFi ${i} ${isOn ? '● Aktif' : '○ Nonaktif'}</p>
+            </div>
+            <div class="toggle-switch ${isOn ? 'active' : ''}" onclick="toggleSSID(${i})"></div>
+          </div>
+        `;
+      }
+      
+      ssidList.innerHTML = html;
+    }
+    
+    function toggleSSID(ssidNumber) {
+      // Toggle status
+      ssidStatus[ssidNumber] = !ssidStatus[ssidNumber];
+      
+      // Update tampilan
+      renderSSIDList();
+      updatePowerStatus();
+      
+      // Notifikasi
+      const status = ssidStatus[ssidNumber] ? 'ON' : 'OFF';
+      alert(`✅ SSID ${ssidNumber} ${status} (simulasi)`);
+      
+      // Di sini nanti tambahkan kode untuk kirim perintah ke router
+      console.log(`Mengirim perintah ke ${routerIp}: SSID${ssidNumber} -> ${status}`);
+    }
+    
+    function setAllWiFi(action) {
+      const isOn = action === 'on';
+      
+      for (let i = 1; i <= 8; i++) {
+        ssidStatus[i] = isOn;
+      }
+      
+      renderSSIDList();
+      updatePowerStatus();
+      
+      alert(`✅ Semua WiFi ${isOn ? 'DINYALAKAN' : 'DIMATIKAN'} (simulasi)`);
+    }
+    
+    function updatePowerStatus() {
+      // Cek apakah ada yang ON
+      const anyOn = Object.values(ssidStatus).some(status => status === true);
+      
+      const powerBadge = document.getElementById('mainPowerStatus');
+      if (anyOn) {
+        powerBadge.textContent = 'ON';
+        powerBadge.className = 'status-badge status-on';
+      } else {
+        powerBadge.textContent = 'OFF';
+        powerBadge.className = 'status-badge status-off';
+      }
+    }
+    
+    // Cek apakah sudah login sebelumnya (simulasi)
+    // Tidak ada auto-login untuk keamanan
+  </script>
+</body>
+</html>
